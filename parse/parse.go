@@ -35,8 +35,12 @@ func readJava(path, orig string) {
 		gopackage = append(gopackage, name)
 	}
 	//fmt.Println(gopackage)
-	gopackname := gopackage[0] //strings.Join(gopackage, "_")
-	fullgopackname := strings.Join(gopackage[1:len(gopackage)-1], "_")
+	gopackname := "root"
+	fullgopackname := ""
+	if len(gopackage) > 0 {
+		gopackname = gopackage[0] //strings.Join(gopackage, "_")
+		fullgopackname = strings.Join(gopackage[1:len(gopackage)-1], "_")
+	}
 	dirname := fmt.Sprintf("%s_go/%s", orig, gopackname)
 	os.Mkdir(dirname, os.ModePerm)
 	endparts := strings.Split(strings.ToLower(tokens[len(tokens)-1]), ".")
