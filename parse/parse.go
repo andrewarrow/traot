@@ -70,6 +70,8 @@ func readJava(path, orig string) {
 				wfile.WriteString("//" + line + "\n")
 			}
 		}
+
+		wfile.Close()
 	}
 }
 
