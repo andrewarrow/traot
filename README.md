@@ -8,7 +8,7 @@ topic
 
 http://stackoverflow.com/questions/40160222/is-there-a-java-to-golang-converter-program
 
-Run traot on a big java project like wildfly and it will make a dir called `wildfly_go`
+Run traot on a big java project like https://github.com/wildfly/wildfly and it will make a dir called `wildfly_go`
 and break up all the endless com dot whatever dot whatever directories into a more flat structure like golang.
 You can then cd into top level dirs and ls the files without having to cd in and out of a million dirs.
 The goal is to help you read the java code in a more golang like way.
