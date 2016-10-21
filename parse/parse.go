@@ -16,7 +16,7 @@ func visit(path string, f os.FileInfo, err error) error {
 }
 
 func readJava(path, orig string) {
-	fmt.Println(path)
+	//fmt.Println(path)
 	f, _ := os.Open(path)
 	data, _ := ioutil.ReadAll(f)
 	str := string(data)
@@ -25,46 +25,60 @@ func readJava(path, orig string) {
 	tokens := strings.Split(path, "/")
 	jpackage := make([]string, 0)
 	for _, toke := range tokens {
-		jpackage = append([]string{toke}, jpackage...)
+		jpackage = append(jpackage, toke)
 	}
-	jpackage = jpackage[1 : len(jpackage)-1]
+	jpackage = jpackage[0 : len(jpackage)-2]
 	gopackage := make([]string, 0)
+	flip := false
 	for _, name := range jpackage {
-		if name == "java" || name == "main" || name == "src" {
-			break
+		if flip {
+			gopackage = append(gopackage, name)
 		}
-		gopackage = append(gopackage, name)
+		if name == "java" {
+			flip = true
+		}
 	}
-	fmt.Println(gopackage)
-	gopackname := "root"
-	fullgopackname := ""
-	if len(gopackage) > 0 {
-		gopackname = gopackage[0] //strings.Join(gopackage, "_")
-		fullgopackname = strings.Join(gopackage[1:len(gopackage)-1], "_")
+	//fmt.Println(gopackage)
+	if len(gopackage) > 2 {
+		first := strings.Join(gopackage[1:3], "_")
+		fmt.Println(first)
+		dirname := fmt.Sprintf("%s_go/%s", orig, first)
+		os.Mkdir(dirname, 0777)
 	}
-	dirname := fmt.Sprintf("%s_go/%s", orig, gopackname)
-	os.Mkdir(dirname, 0777)
-	dirname = fmt.Sprintf("%s_go/%s/%s", orig, gopackname, fullgopackname)
-	fmt.Println("d", dirname)
-	os.Mkdir(dirname, 0777)
-	endparts := strings.Split(strings.ToLower(tokens[len(tokens)-1]), ".")
-	endpart := endparts[0]
-	filename := fmt.Sprintf("%s_go/%s/%s/%s", orig, gopackname, fullgopackname, endpart+".go")
-	//fmt.Println(filename)
-	wfile, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0777)
 
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if strings.HasPrefix(line, "public ") {
-			wfile.WriteString("//" + line + "\n")
-		}
-		if strings.HasPrefix(line, "private ") {
-			wfile.WriteString("//" + line + "\n")
-		}
-		if strings.HasPrefix(line, "protected ") {
-			wfile.WriteString("//" + line + "\n")
-		}
+	for _, _ = range lines {
 	}
+	/*
+		gopackname := "root"
+		fullgopackname := ""
+		if len(gopackage) > 0 {
+			gopackname = gopackage[0] //strings.Join(gopackage, "_")
+			fullgopackname = strings.Join(gopackage[1:len(gopackage)-1], "_")
+		}
+		dirname := fmt.Sprintf("%s_go/%s", orig, gopackname)
+		os.Mkdir(dirname, 0777)
+		dirname = fmt.Sprintf("%s_go/%s/%s", orig, gopackname, fullgopackname)
+		//fmt.Println("d", dirname)
+		os.Mkdir(dirname, 0777)
+		endparts := strings.Split(strings.ToLower(tokens[len(tokens)-1]), ".")
+		endpart := endparts[0]
+		filename := fmt.Sprintf("%s_go/%s/%s/%s", orig, gopackname, fullgopackname, endpart+".go")
+		//fmt.Println(filename)
+		wfile, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0777)
+
+		for _, line := range lines {
+			line = strings.TrimSpace(line)
+			if strings.HasPrefix(line, "public ") {
+				wfile.WriteString("//" + line + "\n")
+			}
+			if strings.HasPrefix(line, "private ") {
+				wfile.WriteString("//" + line + "\n")
+			}
+			if strings.HasPrefix(line, "protected ") {
+				wfile.WriteString("//" + line + "\n")
+			}
+		}
+	*/
 }
 
 func Parse(path string) {
