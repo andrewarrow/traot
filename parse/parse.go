@@ -29,7 +29,6 @@ func readJava(path, orig string) {
 	jpackage = jpackage[1 : len(jpackage)-1]
 	gopackage := make([]string, 0)
 	for _, name := range jpackage {
-		fmt.Println(name)
 		if name == "java" || name == "main" || name == "src" {
 			break
 		}
@@ -39,6 +38,10 @@ func readJava(path, orig string) {
 	gopackname := strings.Join(gopackage, "_")
 	dirname := fmt.Sprintf("%s_go/%s", orig, gopackname)
 	os.Mkdir(dirname, os.ModePerm)
+	endparts := strings.Split(strings.ToLower(tokens[len(tokens)-1]), ".")
+	endpart := endparts[0]
+	filename := fmt.Sprintf("%s_go/%s/%s", orig, gopackname, endpart+".go")
+	fmt.Println(filename)
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
