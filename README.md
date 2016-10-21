@@ -72,3 +72,4 @@ drwxr-xr-x    62 aa  staff    2108 Oct 21 13:08 wildfly_test
 //public void suspendBatch() throws Exception {
 //public void suspendNoBatch() throws Exception {
 ```
+Future plans: write out more the java code methods and convert them to golang func's
