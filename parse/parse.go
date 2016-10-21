@@ -34,26 +34,27 @@ func readJava(path, orig string) {
 		}
 		gopackage = append(gopackage, name)
 	}
-	fmt.Println(gopackage)
-	gopackname := strings.Join(gopackage, "_")
+	//fmt.Println(gopackage)
+	gopackname := gopackage[0] //strings.Join(gopackage, "_")
+	fullgopackname := strings.Join(gopackage[1:len(gopackage)-1], "_")
 	dirname := fmt.Sprintf("%s_go/%s", orig, gopackname)
 	os.Mkdir(dirname, os.ModePerm)
 	endparts := strings.Split(strings.ToLower(tokens[len(tokens)-1]), ".")
 	endpart := endparts[0]
-	filename := fmt.Sprintf("%s_go/%s/%s", orig, gopackname, endpart+".go")
+	filename := fmt.Sprintf("%s_go/%s/%s", orig, fullgopackname, endpart+".go")
 	fmt.Println(filename)
-	wfile, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0666)
+	wfile, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0777)
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, "public ") {
-			wfile.WriteString("//" + line)
+			wfile.WriteString("//" + line + "\n")
 		}
 		if strings.HasPrefix(line, "private ") {
-			wfile.WriteString("//" + line)
+			wfile.WriteString("//" + line + "\n")
 		}
 		if strings.HasPrefix(line, "protected ") {
-			wfile.WriteString("//" + line)
+			wfile.WriteString("//" + line + "\n")
 		}
 	}
 }
