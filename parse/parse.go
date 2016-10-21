@@ -42,27 +42,25 @@ func readJava(path, orig string) {
 	endpart := endparts[0]
 	filename := fmt.Sprintf("%s_go/%s/%s", orig, gopackname, endpart+".go")
 	fmt.Println(filename)
+	wfile, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0666)
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, "public ") {
-			//fmt.Println(line)
+			wfile.WriteString("//" + line)
 		}
 		if strings.HasPrefix(line, "private ") {
-			//fmt.Println(line)
+			wfile.WriteString("//" + line)
 		}
 		if strings.HasPrefix(line, "protected ") {
-			//fmt.Println(line)
+			wfile.WriteString("//" + line)
 		}
 	}
 }
 
 func Parse(path string) {
 	filepath.Walk(path, visit)
-	for i, file := range files {
+	for _, file := range files {
 		readJava(file, path)
-		if i > 5 {
-			break
-		}
 	}
 }
