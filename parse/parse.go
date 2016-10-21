@@ -15,7 +15,7 @@ func visit(path string, f os.FileInfo, err error) error {
 	return nil
 }
 
-func readJava(path string) {
+func readJava(path, orig string) {
 	f, _ := os.Open(path)
 	data, _ := ioutil.ReadAll(f)
 	str := string(data)
@@ -36,17 +36,20 @@ func readJava(path string) {
 		gopackage = append(gopackage, name)
 	}
 	fmt.Println(gopackage)
+	gopackname := strings.Join(gopackage, "_")
+	dirname := fmt.Sprintf("%s_go/%s", orig, gopackname)
+	os.Mkdir(dirname, os.ModePerm)
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if strings.HasPrefix(line, "public ") {
-			fmt.Println(line)
+			//fmt.Println(line)
 		}
 		if strings.HasPrefix(line, "private ") {
-			fmt.Println(line)
+			//fmt.Println(line)
 		}
 		if strings.HasPrefix(line, "protected ") {
-			fmt.Println(line)
+			//fmt.Println(line)
 		}
 	}
 }
@@ -54,7 +57,7 @@ func readJava(path string) {
 func Parse(path string) {
 	filepath.Walk(path, visit)
 	for i, file := range files {
-		readJava(file)
+		readJava(file, path)
 		if i > 5 {
 			break
 		}
