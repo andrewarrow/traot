@@ -16,6 +16,7 @@ func visit(path string, f os.FileInfo, err error) error {
 }
 
 func readJava(path, orig string) {
+	fmt.Println(path)
 	f, _ := os.Open(path)
 	data, _ := ioutil.ReadAll(f)
 	str := string(data)
@@ -34,7 +35,7 @@ func readJava(path, orig string) {
 		}
 		gopackage = append(gopackage, name)
 	}
-	//fmt.Println(gopackage)
+	fmt.Println(gopackage)
 	gopackname := "root"
 	fullgopackname := ""
 	if len(gopackage) > 0 {
@@ -42,11 +43,14 @@ func readJava(path, orig string) {
 		fullgopackname = strings.Join(gopackage[1:len(gopackage)-1], "_")
 	}
 	dirname := fmt.Sprintf("%s_go/%s", orig, gopackname)
-	os.Mkdir(dirname, os.ModePerm)
+	os.Mkdir(dirname, 0777)
+	dirname = fmt.Sprintf("%s_go/%s/%s", orig, gopackname, fullgopackname)
+	fmt.Println("d", dirname)
+	os.Mkdir(dirname, 0777)
 	endparts := strings.Split(strings.ToLower(tokens[len(tokens)-1]), ".")
 	endpart := endparts[0]
-	filename := fmt.Sprintf("%s_go/%s/%s", orig, fullgopackname, endpart+".go")
-	fmt.Println(filename)
+	filename := fmt.Sprintf("%s_go/%s/%s/%s", orig, gopackname, fullgopackname, endpart+".go")
+	//fmt.Println(filename)
 	wfile, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0777)
 
 	for _, line := range lines {
