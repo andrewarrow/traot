@@ -21,8 +21,31 @@ func readJava(path string) {
 	str := string(data)
 	lines := strings.Split(str, "\n")
 
+	tokens := strings.Split(path, "/")
+	jpackage := make([]string, 0)
+	for _, toke := range tokens {
+		jpackage = append([]string{toke}, jpackage...)
+	}
+	jpackage = jpackage[1 : len(jpackage)-1]
+	gopackage := make([]string, 0)
+	for _, name := range jpackage {
+		fmt.Println(name)
+		if name == "java" || name == "main" || name == "src" {
+			break
+		}
+		gopackage = append(gopackage, name)
+	}
+	fmt.Println(gopackage)
+
 	for _, line := range lines {
-		if strings.HasPrefix(line, "public class ") {
+		line = strings.TrimSpace(line)
+		if strings.HasPrefix(line, "public ") {
+			fmt.Println(line)
+		}
+		if strings.HasPrefix(line, "private ") {
+			fmt.Println(line)
+		}
+		if strings.HasPrefix(line, "protected ") {
 			fmt.Println(line)
 		}
 	}
