@@ -93,36 +93,42 @@ func handleLine(wfile *os.File, line string) {
 		}
 		flip := false
 		params := make([]string, 0)
-		for _, t := range tokens {
-			if strings.Contains(t, "(") {
-				flip = true
-			}
-			if flip {
-				//[CopyNoChildren()]
-				//[filterVideoContentOnList(List<VideoContentVO> contentList, List<Long> userIdList)]
-				//[filterSeasonContentOnList(List<SeriesContentVO> contentList, List<Long> userIdList)]
-				entry := t
+		if !strings.Contains(line, "Map<") && !strings.Contains(line, "//") {
+			for _, t := range tokens {
 				if strings.Contains(t, "(") {
-					inside := strings.Split(t, "(")
-					entry = inside[1]
+					flip = true
 				}
-				if strings.Contains(entry, ")") {
-					inside := strings.Split(entry, ")")
-					entry = inside[0]
-				}
+				if flip {
+					//[CopyNoChildren()]
+					//[filterContentOnList(List<ContentVO> contentList, List<Long> userIdList)]
+					//[filterContentOnList(List<ContentVO> contentList, List<Long> userIdList)]
+					//[Map<String, String> placeholderDefaultValues
+					entry := t
+					if strings.Contains(t, "(") {
+						inside := strings.Split(t, "(")
+						entry = inside[1]
+					}
+					if strings.Contains(entry, ")") {
+						inside := strings.Split(entry, ")")
+						entry = inside[0]
+					}
 
-				params = append(params, entry)
-			}
-			if strings.Contains(t, ")") {
-				break
+					params = append(params, entry)
+				}
+				if strings.Contains(t, ")") {
+					break
+				}
 			}
 		}
 		fmt.Println(params)
 		params = strings.Split(strings.Join(params, " "), ",")
 		plist := make([]string, 0)
-		if len(params) == 0 {
+		if len(params) > 1 {
 			for _, t := range params {
 				t = strings.TrimSpace(t)
+				if t == "" {
+					continue
+				}
 				inside := strings.Split(t, " ")
 				plist = append(plist, inside[1]+" "+inside[0])
 			}
