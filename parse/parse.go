@@ -117,11 +117,19 @@ func handleLine(wfile *os.File, line string) {
 				break
 			}
 		}
-		fmt.Println(params)
+		params = strings.Split(strings.Join(params, " "), ",")
+		plist := make([]string, 0)
+		for _, t := range params {
+			t = strings.TrimSpace(t)
+			inside := strings.Split(t, " ")
+			plist = append(plist, inside[1]+" "+inside[0])
+		}
 		tokens = strings.Split(name, "(")
 		name = tokens[0]
 
-		wfile.WriteString("func " + name + "() {\n")
+		wfile.WriteString("func " + name + "(")
+		wfile.WriteString(strings.Join(plist, ", "))
+		wfile.WriteString(") {\n")
 		wfile.WriteString("}\n")
 	}
 }
