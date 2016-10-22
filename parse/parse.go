@@ -54,9 +54,10 @@ func readJava(path, orig string) {
 			reststr = strings.Join(rest[1:len(rest)], "_")
 		}
 		filename := fmt.Sprintf("%s_go/%s/%s", orig, first, reststr+"_"+endpart+".go")
-		fmt.Println(filename)
+		//fmt.Println(filename)
 
 		wfile, _ := os.OpenFile(filename, os.O_CREATE|os.O_WRONLY, 0777)
+		wfile.WriteString("package foo\n\n")
 
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
@@ -93,7 +94,8 @@ func handleLine(wfile *os.File, line string) {
 		tokens = strings.Split(name, "(")
 		name = tokens[0]
 
-		wfile.WriteString("func " + name + "() { \n")
+		wfile.WriteString("func " + name + "() {\n")
+		wfile.WriteString("}\n")
 	}
 }
 
