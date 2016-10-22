@@ -91,6 +91,20 @@ func handleLine(wfile *os.File, line string) {
 				break
 			}
 		}
+		flip := false
+		params := make([]string, 0)
+		for _, t := range tokens {
+			if strings.Contains(t, "(") {
+				flip = true
+			}
+			if flip {
+				params = append(params, t)
+			}
+			if strings.Contains(t, ")") {
+				break
+			}
+		}
+		fmt.Println(params)
 		tokens = strings.Split(name, "(")
 		name = tokens[0]
 
