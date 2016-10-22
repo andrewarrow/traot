@@ -98,7 +98,20 @@ func handleLine(wfile *os.File, line string) {
 				flip = true
 			}
 			if flip {
-				params = append(params, t)
+				//[CopyNoChildren()]
+				//[filterVideoContentOnList(List<VideoContentVO> contentList, List<Long> userIdList)]
+				//[filterSeasonContentOnList(List<SeriesContentVO> contentList, List<Long> userIdList)]
+				entry := t
+				if strings.Contains(t, "(") {
+					inside := strings.Split(t, "(")
+					entry = inside[1]
+				}
+				if strings.Contains(t, ")") {
+					inside := strings.Split(t, ")")
+					entry = inside[0]
+				}
+
+				params = append(params, entry)
 			}
 			if strings.Contains(t, ")") {
 				break
