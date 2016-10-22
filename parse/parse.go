@@ -60,18 +60,40 @@ func readJava(path, orig string) {
 
 		for _, line := range lines {
 			line = strings.TrimSpace(line)
-			if strings.HasPrefix(line, "public ") {
-				wfile.WriteString("//" + line + "\n")
-			}
-			if strings.HasPrefix(line, "private ") {
-				wfile.WriteString("//" + line + "\n")
-			}
-			if strings.HasPrefix(line, "protected ") {
-				wfile.WriteString("//" + line + "\n")
-			}
+			handleLine(wfile, line)
 		}
 
 		wfile.Close()
+	}
+}
+func handleLine(wfile *os.File, line string) {
+	hasLevel := false
+	hasEqual := false
+	hasParen := false
+	if strings.HasPrefix(line, "public ") || strings.HasPrefix(line, "private ") || strings.HasPrefix(line, "protected ") {
+		hasLevel = true
+	}
+
+	if strings.Contains(line, "=") {
+		hasEqual = true
+	}
+	if strings.Contains(line, "(") {
+		hasParen = true
+	}
+
+	if hasLevel && !hasEqual && hasParen {
+		name := ""
+		tokens := strings.Split(line, " ")
+		for _, t := range tokens {
+			if strings.Contains(t, "(") {
+				name = t
+				break
+			}
+		}
+		tokens = strings.Split(name, "(")
+		name = tokens[0]
+
+		wfile.WriteString("func " + name + "() { \n")
 	}
 }
 
