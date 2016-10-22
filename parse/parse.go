@@ -106,8 +106,8 @@ func handleLine(wfile *os.File, line string) {
 					inside := strings.Split(t, "(")
 					entry = inside[1]
 				}
-				if strings.Contains(t, ")") {
-					inside := strings.Split(t, ")")
+				if strings.Contains(entry, ")") {
+					inside := strings.Split(entry, ")")
 					entry = inside[0]
 				}
 
@@ -117,12 +117,15 @@ func handleLine(wfile *os.File, line string) {
 				break
 			}
 		}
+		fmt.Println(params)
 		params = strings.Split(strings.Join(params, " "), ",")
 		plist := make([]string, 0)
-		for _, t := range params {
-			t = strings.TrimSpace(t)
-			inside := strings.Split(t, " ")
-			plist = append(plist, inside[1]+" "+inside[0])
+		if len(params) == 0 {
+			for _, t := range params {
+				t = strings.TrimSpace(t)
+				inside := strings.Split(t, " ")
+				plist = append(plist, inside[1]+" "+inside[0])
+			}
 		}
 		tokens = strings.Split(name, "(")
 		name = tokens[0]
